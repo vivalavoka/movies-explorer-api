@@ -15,6 +15,9 @@ const { NotFoundError } = require('./errors');
 const error = require('./middlewares/error');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
+const users = require('./routes/users');
+const movies = require('./routes/movies');
+
 const mongoUrl = `mongodb://${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB}`;
 
 mongoose.connect(mongoUrl, {
@@ -43,11 +46,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
 
-/**
- * Routes
- *
- *
- */
+app.use('/', users, movies);
 
 app.use(errorLogger);
 

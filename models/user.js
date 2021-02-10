@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: 'password не может быть пустым',
+      minlength: 8,
       select: false,
     },
     name: {

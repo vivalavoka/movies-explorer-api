@@ -1,9 +1,10 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const { JWT_SECRET = '' } = process.env;
+const { tokenKey, defaultJwtSecret } = require('../utils/constants');
 
-const { tokenKey } = require('../utils/constants');
+const { JWT_SECRET = defaultJwtSecret } = process.env;
+
 const { NotFoundError } = require('../errors');
 const User = require('../models/user');
 
