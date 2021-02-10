@@ -47,4 +47,14 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     });
 };
 
+userSchema.statics.checkUserByEmail = function (email) {
+  return this.findOne({ email })
+    .then((user) => {
+      if (user) {
+        return Promise.reject(new UnauthorizedError('Пользователь с таким email уже существует'));
+      }
+      return Promise.resolve();
+    });
+};
+
 module.exports = mongoose.model('user', userSchema);
