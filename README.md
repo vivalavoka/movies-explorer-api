@@ -26,3 +26,9 @@
 `npm run start` — запускает сервер
 `npm run dev` — запускает сервер с hot-reload
 `npm run test` — запускает тесты
+
+
+## Ссылки
+
+- API domain: [api.nechitaylo.students.nomoredomains.work](https://api.nechitaylo.students.nomoredomains.work)
+- IP сервера: [84.201.155.192](https://84.201.155.192)
