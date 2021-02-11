@@ -13,7 +13,7 @@ const {
 const router = Router();
 
 router.get('/users/me', auth, getUser);
-router.put('/users/me', auth, celebrate({
+router.patch('/users/me', auth, celebrate({
   [Segments.BODY]: Joi.object().keys({
     email: Joi.string().email().required(),
     name: Joi.string().min(2).max(30).required(),
@@ -32,6 +32,6 @@ router.post('/signin', celebrate({
     password: Joi.string().min(8).required(),
   }),
 }), login);
-router.post('/signout', auth, logout);
+router.get('/signout', auth, logout);
 
 module.exports = router;
