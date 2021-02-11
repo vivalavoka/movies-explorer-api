@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const { celebrate, Joi, Segments } = require('celebrate');
 
+const { urlRegExp } = require('../utils/validator');
 const auth = require('../middlewares/auth');
 
 const {
@@ -14,14 +15,15 @@ const router = Router();
 router.get('/movies', auth, getMovies);
 router.post('/movies', auth, celebrate({
   [Segments.BODY]: Joi.object().keys({
+    movieId: Joi.number().required(),
     country: Joi.string().required(),
     director: Joi.string().required(),
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().pattern(/https?:\/\/(w{3}\.)?[0-9a-z-._~:/?#[\]@!$&'()*+,;=]+#?/).required(),
-    trailer: Joi.string().pattern(/https?:\/\/(w{3}\.)?[0-9a-z-._~:/?#[\]@!$&'()*+,;=]+#?/).required(),
-    thumbnail: Joi.string().pattern(/https?:\/\/(w{3}\.)?[0-9a-z-._~:/?#[\]@!$&'()*+,;=]+#?/).required(),
+    image: Joi.string().pattern(urlRegExp).required(),
+    trailer: Joi.string().pattern(urlRegExp).required(),
+    thumbnail: Joi.string().pattern(urlRegExp).required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
   }),

@@ -1,4 +1,5 @@
 const { NotFoundError, ForbiddenError } = require('../errors');
+const { MOVIE_NOT_FOUND, MOVIE_ALREADY_SAVED, MOVIE_DELETE_RESTRICTED } = require('../utils/constants');
 const Movie = require('../models/movie');
 
 const getMovies = (req, res, next) => {
@@ -12,22 +13,16 @@ const getMovies = (req, res, next) => {
 
 const saveMovie = (req, res, next) => {
   const { user } = req;
-  const {
-    country, director, duration, year, description, image, trailer, nameRU, nameEN, thumbnail,
-  } = req.body;
-  Movie.create({
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailer,
-    nameRU,
-    nameEN,
-    thumbnail,
-    owner: user._id,
-  })
+  Movie.findOne({ movieId: req.body.movieId })
+    .then((movie) => {
+      if (movie) {
+        throw new ForbiddenError(MOVIE_ALREADY_SAVED);
+      }
+      return Movie.create({
+        ...req.body,
+        owner: user._id,
+      });
+    })
     .then((movie) => {
       res.send(movie);
     })
@@ -41,10 +36,10 @@ const removeMovie = (req, res, next) => {
     .select('owner')
     .then((movie) => {
       if (!movie) {
-        throw new NotFoundError('Нет фильма с таким id');
+        throw new NotFoundError(MOVIE_NOT_FOUND);
       }
       if (movie.owner.toString() !== user._id) {
-        throw new ForbiddenError('Невозможно удалить эту карточку');
+        throw new ForbiddenError(MOVIE_DELETE_RESTRICTED);
       }
       return Movie.findByIdAndDelete(movieId);
     })

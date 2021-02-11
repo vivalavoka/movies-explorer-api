@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const validator = require('validator');
 
 const { UnauthorizedError } = require('../errors');
+const { USER_ALREADY_EXISTS, INVALID_CREDENTIALS } = require('../utils/constants');
 
 const userSchema = new mongoose.Schema(
   {
@@ -37,11 +38,11 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     .select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new UnauthorizedError('Неправильные почта или пароль'));
+        return Promise.reject(new UnauthorizedError(INVALID_CREDENTIALS));
       }
       return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
-          return Promise.reject(new UnauthorizedError('Неправильные почта или пароль'));
+          return Promise.reject(new UnauthorizedError(INVALID_CREDENTIALS));
         }
         return user;
       });
@@ -52,7 +53,7 @@ userSchema.statics.checkUserByEmail = function (email) {
   return this.findOne({ email })
     .then((user) => {
       if (user) {
-        return Promise.reject(new UnauthorizedError('Пользователь с таким email уже существует'));
+        return Promise.reject(new UnauthorizedError(USER_ALREADY_EXISTS));
       }
       return Promise.resolve();
     });

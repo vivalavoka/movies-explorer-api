@@ -1,5 +1,4 @@
 const express = require('express');
-const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
@@ -13,10 +12,11 @@ const { MONGO_HOST = 'localhost', MONGO_PORT = '27017', MONGO_DB = 'bitfilmsdb' 
 
 const { NotFoundError } = require('./errors');
 const error = require('./middlewares/error');
+const { RESOURCE_NOT_FOUND } = require('./utils/constants');
+const limitter = require('./middlewares/rate-limitter');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const users = require('./routes/users');
-const movies = require('./routes/movies');
+const routes = require('./routes');
 
 const mongoUrl = `mongodb://${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB}`;
 
@@ -27,11 +27,6 @@ mongoose.connect(mongoUrl, {
 });
 
 const app = express();
-
-const limitter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
 
 app.use(limitter);
 app.use(helmet());
@@ -46,12 +41,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
 
-app.use('/', users, movies);
+app.use('/', routes.users, routes.movies);
 
 app.use(errorLogger);
 
 app.use('*', (req, res, next) => {
-  next(new NotFoundError('Запрашиваемый ресурс не найден'));
+  next(new NotFoundError(RESOURCE_NOT_FOUND));
 });
 
 app.use(errors());

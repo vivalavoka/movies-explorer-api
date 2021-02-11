@@ -1,9 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const { tokenKey, defaultJwtSecret } = require('../utils/constants');
+const { TOKEN_KEY, DEFAULT_JWT_SECRET, USER_NOT_FOUND } = require('../utils/constants');
 
-const { JWT_SECRET = defaultJwtSecret } = process.env;
+const { JWT_SECRET = DEFAULT_JWT_SECRET } = process.env;
 
 const { NotFoundError } = require('../errors');
 const User = require('../models/user');
@@ -13,7 +13,7 @@ const getUser = (req, res, next) => {
   User.findById(id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Нет пользователя с таким id');
+        throw new NotFoundError(USER_NOT_FOUND);
       }
       res.send(user);
     })
@@ -60,7 +60,7 @@ const login = (req, res, next) => {
         expiresIn: '7d',
       });
 
-      res.cookie(tokenKey, token, {
+      res.cookie(TOKEN_KEY, token, {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
         sameSite: true,
@@ -72,7 +72,7 @@ const login = (req, res, next) => {
 };
 
 const logout = (req, res) => {
-  res.clearCookie(tokenKey);
+  res.clearCookie(TOKEN_KEY);
   res.send({});
 };
 
