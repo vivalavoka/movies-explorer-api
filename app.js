@@ -28,7 +28,7 @@ mongoose.connect(mongoUrl, {
 
 const app = express();
 
-app.use(limitter);
+app.use(limitter());
 app.use(helmet());
 app.use(cors({
   origin: '*',
