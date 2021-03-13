@@ -33,7 +33,7 @@ app.use(limitter());
 app.use(cors({
   origin: 'https://nechitaylo.students.nomoredomains.work',
   credentials: true,
-  allowedHeaders: ['Origin', 'Accept', 'X-Requested-With', 'Content-Type', 'Access-Control-Request-Method', 'Access-Control-Request-Headers']
+  allowedHeaders: ['Origin', 'Set-Cookie', 'Accept', 'X-Requested-With', 'Content-Type', 'Access-Control-Request-Method', 'Access-Control-Request-Headers', 'Access-Control-Allow-Headers'],
 }));
 app.use(cookieParser());
 app.use(bodyParser.json());

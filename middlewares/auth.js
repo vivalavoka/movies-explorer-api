@@ -8,6 +8,7 @@ const { UnauthorizedError } = require('../errors');
 
 module.exports = (req, res, next) => {
   const token = req.cookies[TOKEN_KEY];
+  console.log('token: ', token);
 
   if (!token) {
     throw new UnauthorizedError(AUTHORIZATION_REQUIRED);
