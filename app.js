@@ -31,7 +31,7 @@ const app = express();
 app.use(limitter());
 // app.use(helmet());
 app.use(cors({
-  origin: 'https://nechitaylo.students.nomoredomains.work/',
+  origin: 'https://nechitaylo.students.nomoredomains.work',
   credentials: true,
   allowedHeaders: ['Origin', 'Accept', 'X-Requested-With', 'Content-Type', 'Access-Control-Request-Method', 'Access-Control-Request-Headers']
 }));
