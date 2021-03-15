@@ -52,7 +52,10 @@ userSchema.statics.findUserByCredentials = function (email, password) {
 userSchema.statics.checkUserByEmail = function (email, userId = null) {
   return this.findOne({ email })
     .then((user) => {
-      if (user && !(userId && user._id === userId)) {
+      console.log('user: ', user);
+      console.log('userId: ', userId);
+
+      if (user && (!userId || user._id !== userId)) {
         return Promise.reject(new UnauthorizedError(USER_ALREADY_EXISTS));
       }
       return Promise.resolve();
