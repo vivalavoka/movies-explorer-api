@@ -23,7 +23,7 @@ const getUser = (req, res, next) => {
 const updateUser = (req, res, next) => {
   const { name, email } = req.body;
   const id = req.user._id;
-  User.checkUserByEmail(email)
+  User.checkUserByEmail(email, id)
     .then(() => User.findByIdAndUpdate(
       id,
       { name, email },
